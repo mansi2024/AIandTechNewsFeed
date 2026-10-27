@@ -243,7 +243,7 @@ def gemini_summarize(candidates: dict[str, list[dict]]) -> dict | None:
         for sec, cs in candidates.items() if cs
     }
     prompt = (
-        "You are the editor of a daily briefing for a busy reader who follows AI, tech, "
+        "You are the editor of a daily digest for a busy reader who follows AI, tech, "
         "global markets and the Indian economy. For each section below, choose the "
         f"{ITEMS_PER_SECTION} most important stories (market-moving, major product/research "
         "releases, policy shifts; skip clickbait, opinion fluff and minor items) ordered by "
@@ -325,7 +325,7 @@ def render_html(headline: str, sections: dict[str, list[dict]], markets: list[di
     parts = [
         '<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:640px;'
         'margin:0 auto;padding:16px;color:#1a1a1a;line-height:1.5">',
-        f'<h1 style="font-size:22px;margin:0 0 4px">Daily Briefing</h1>'
+        f'<h1 style="font-size:22px;margin:0 0 4px">Daily Digest</h1>'
         f'<div style="color:#666;font-size:13px;margin-bottom:12px">{today}</div>',
     ]
     if headline:
@@ -371,9 +371,9 @@ def render_html(headline: str, sections: dict[str, list[dict]], markets: list[di
 
 
 def send_email(subject: str, body_html: str) -> None:
-    user = os.environ["GMAIL_ADDRESS"]
-    password = os.environ["GMAIL_APP_PASSWORD"]
-    to = os.environ.get("TO_EMAIL") or user
+    user = os.environ["GMAIL_ADDRESS"].strip()
+    password = "".join(os.environ["GMAIL_APP_PASSWORD"].split())  # drop spaces/newlines from pasted secret
+    to = (os.environ.get("TO_EMAIL") or "").strip() or user
     msg = MIMEMultipart("alternative")
     msg["Subject"], msg["From"], msg["To"] = subject, user, to
     msg.attach(MIMEText("Open this email in an HTML-capable client.", "plain"))
@@ -406,7 +406,7 @@ def main() -> int:
     headline, sections = build_sections(candidates, gemini_summarize(candidates))
     log("Market snapshot...")
     body = render_html(headline, sections, market_snapshot())
-    subject = f"Daily Briefing - {datetime.now(IST).strftime('%d %b %Y')}"
+    subject = f"Daily Digest - {datetime.now(IST).strftime('%d %b %Y')}"
 
     if args.dry_run:
         (ROOT / "digest.html").write_text(body)

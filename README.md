@@ -1,6 +1,6 @@
 # Daily AI / Tech / Markets digest
 
-Emails one briefing a day (10:00 IST): AI, Tech, Global Markets & Economy, India Markets & Economy, plus a markets snapshot.
+Emails one digest a day (10:00 IST): AI, Tech, Global Markets & Economy, India Markets & Economy, plus a markets snapshot.
 Gemini (free tier) picks and summarises the top stories; if it fails, the email still goes out with feed snippets.
 
 ## Setup
